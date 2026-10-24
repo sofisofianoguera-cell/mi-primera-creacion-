@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi primera animación</title>
+
+<style>
+body {
+    margin: 0;
+    background: #030606;
+    color: #00ff99;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.persona {
+    position: relative;
+    z-index: 1;
+    white-space: pre;
+    font-size: clamp(10px, 2vw, 18px);
+    line-height: 1.05;
+    text-align: center;
+    color: #aaffcc;
+    text-shadow: 0 0 8px #00ff88;
+    animation: aparecer 3s infinite alternate;
+}
+
+@keyframes aparecer {
+    from { opacity: 0.55; }
+    to {
+        opacity: 1;
+        text-shadow: 0 0 18px #00ff88;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="lluvia"></canvas>
+
+<div class="persona">
+       .-"""-.
+      /  o o  \
+     |    ^    |
+     |  \___/  |
+      \       /
+       '-._.-'
+         /|\
+        / | \
+          |
+         / \
+        /   \
+</div>
+
+<script>
+const canvas = document.getElementById("lluvia");
+const ctx = canvas.getContext("2d");
+
+let columnas = [];
+
+function preparar() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    columnas = Array(
+        Math.ceil(canvas.width / 16)
+    ).fill(0);
+}
+
+function animar() {
+    ctx.fillStyle = "rgba(3, 6, 6, 0.12)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = "14px monospace";
+
+    columnas.forEach((y, i) => {
+        const letra = String.fromCharCode(
+            33 + Math.random() * 90
+        );
+
+        ctx.fillStyle = Math.random() > 0.5
+            ? "#00ff99"
+            : "#087744";
+
+        ctx.fillText(letra, i * 16, y * 16);
+
+        if (y * 16 > canvas.height && Math.random() > 0.975) {
+            columnas[i] = 0;
+        } else {
+            columnas[i]++;
+        }
+    });
+
+    requestAnimationFrame(animar);
+}
+
+window.addEventListener("resize", preparar);
+
+preparar();
+animar();
+</script>
+
+</body>
+</html>
